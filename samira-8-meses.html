@@ -405,6 +405,46 @@
     pointer-events:none;
   }
 
+  /* ---------- BACKGROUND PETALS (behind the letter card) ---------- */
+  .bg-petal-layer{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:8;
+  }
+
+  .bg-petal{
+    position:absolute;
+    top:-60px;
+    opacity:.8;
+  }
+
+  .bg-petal svg{ display:block; }
+
+  @keyframes petal-fall-a{
+    0%{ transform:translate(0,0) rotate(0deg); }
+    50%{ transform:translate(34px, 55vh) rotate(170deg); }
+    100%{ transform:translate(-14px, 115vh) rotate(340deg); }
+  }
+  @keyframes petal-fall-b{
+    0%{ transform:translate(0,0) rotate(0deg); }
+    50%{ transform:translate(-38px, 55vh) rotate(-170deg); }
+    100%{ transform:translate(18px, 115vh) rotate(-340deg); }
+  }
+
+  /* ---------- DAYS COUNTER ---------- */
+  .days-counter{
+    text-align:center;
+    font-family:'Mrs Saint Delafield', cursive;
+    color:var(--wine);
+    font-size:clamp(1.5rem, 4.5vw, 1.9rem);
+    margin-bottom:.4rem;
+  }
+  .days-counter span{
+    font-size:1.25em;
+  }
+
   @media (prefers-reduced-motion: reduce){
     .env-flap, .envelope-wrap, .letter-wrap, .env-seal{ transition:none !important; }
     .rose-particle{ display:none; }
@@ -414,6 +454,8 @@
 <body>
 
 <div class="stage">
+
+  <div class="bg-petal-layer" id="bgPetalLayer"></div>
 
   <div class="envelope-wrap" id="envelopeWrap">
     <div class="envelope" id="envelope">
@@ -440,7 +482,7 @@
     <div class="letter-card">
       <h1 class="letter-title">Felices ocho meses, mi amor <svg class="rose-icon" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="roseGradB" cx="40%" cy="35%" r="70%"><stop offset="0%" stop-color="#f6c6d2"/><stop offset="100%" stop-color="#8f2340"/></radialGradient></defs><path d="M20 4 C28 6 33 13 31 20 C36 19 39 24 36 29 C39 33 35 38 30 36 C29 39 22 40 20 36 C15 40 9 37 10 32 C5 33 3 27 7 23 C3 19 6 13 11 14 C10 8 16 3 20 4 Z" fill="url(#roseGradB)" opacity="0.92"/><path d="M20 10 C24 12 25 17 22 20 C25 21 25 25 21 26 C23 29 19 32 17 29 C14 31 11 28 13 25 C10 24 10 20 13 19 C11 16 14 12 17 13 C16 10 18 9 20 10 Z" fill="#5c1730" opacity="0.88"/></svg></h1>
       <p class="letter-body">
-        Sé que con esto no voy a demostrarte lo mucho que te amo. Quería empezar esta carta pidiéndote perdón por no ser lo que vos querías últimamente; te juro que me voy a esforzar más para ser el mejor hombre para vos, porque genuinamente te amo, aunque lo dudes a veces. Te amo con todo mi corazón, sos todo lo que siempre esperé en mi vida, sos esa pieza que me faltó todos estos años. Sin vos yo estaba perdido, no sabía cómo seguir, y apareciste en mi vida y de la nada todo tuvo sentido para mí. Hacés que todo sea más fácil de afrontar; yo vivo con un montón de problemas que hacen que no me quiera levantar de la cama, pero gracias a vos esos problemas desaparecen, y hacés que me sienta yo. Es raro decirlo, pero no sería yo si no estás conmigo. Te amo muchísimo, Samira, y voy a ser el hombre con el que te cases y tengamos un montón de monitos. Fuera de chiste, le diste estabilidad y sentido a mi vida, me hacés sentir el hombre más afortunado del mundo, y voy a estar con vos toda mi vida. Aunque peleemos y tengamos problemas, yo nunca te voy a dejar de amar, porque sos la única por la que mi corazón late. Y te amo. Amo cómo me hacés sentir, amo tu risa, amo los momentos donde nos ponemos autistas, amo cuando te ponés mañosa, y amo estar con vos. Simplemente, te amo.
+        Ya llevamos <span id="daysCount">0</span> días juntos. Sé que con esto no voy a demostrarte lo mucho que te amo. Quería empezar esta carta pidiéndote perdón por no ser lo que vos querías últimamente; te juro que me voy a esforzar más para ser el mejor hombre para vos, porque genuinamente te amo, aunque lo dudes a veces. Te amo con todo mi corazón, sos todo lo que siempre esperé en mi vida, sos esa pieza que me faltó todos estos años. Sin vos yo estaba perdido, no sabía cómo seguir, y apareciste en mi vida y de la nada todo tuvo sentido para mí. Hacés que todo sea más fácil de afrontar; yo vivo con un montón de problemas que hacen que no me quiera levantar de la cama, pero gracias a vos esos problemas desaparecen, y hacés que me sienta yo. Es raro decirlo, pero no sería yo si no estás conmigo. Te amo muchísimo, Samira, y voy a ser el hombre con el que te cases y tengamos un montón de monitos. Fuera de chiste, le diste estabilidad y sentido a mi vida, me hacés sentir el hombre más afortunado del mundo, y voy a estar con vos toda mi vida. Aunque peleemos y tengamos problemas, yo nunca te voy a dejar de amar, porque sos la única por la que mi corazón late. Y te amo. Amo cómo me hacés sentir, amo tu risa, amo los momentos donde nos ponemos autistas, amo cuando te ponés mañosa, y amo estar con vos. Simplemente, te amo.
       </p>
       <p class="letter-signature">Valentín</p>
 
@@ -492,7 +534,6 @@
     const size = 22 + Math.random()*20;
     const gradId = 'pg' + Math.random().toString(36).slice(2,9);
     const wrapper = document.createElement('div');
-    wrapper.className = 'petal';
     wrapper.innerHTML = `
       <svg width="${size}" height="${size*1.25}" viewBox="0 0 40 50">
         <defs>
@@ -517,6 +558,7 @@
     for(let i=0;i<count;i++){
       const colorPair = PETAL_COLORS[Math.floor(Math.random()*PETAL_COLORS.length)];
       const el = petalSVG(colorPair);
+      el.classList.add('petal');
       document.body.appendChild(el);
 
       particles.push({
@@ -574,7 +616,39 @@
 
     setTimeout(() => {
       letterWrap.classList.add('visible');
+      startBgPetals();
     }, 700);
+  }
+
+  const bgPetalLayer = document.getElementById('bgPetalLayer');
+  let bgPetalInterval = null;
+
+  function spawnBgPetal(){
+    const colorPair = PETAL_COLORS[Math.floor(Math.random()*PETAL_COLORS.length)];
+    const el = petalSVG(colorPair);
+    el.classList.add('bg-petal');
+    el.style.left = (Math.random() * window.innerWidth) + 'px';
+    el.style.opacity = (0.45 + Math.random()*0.4).toFixed(2);
+    const duration = 9 + Math.random() * 7;
+    const anim = Math.random() < 0.5 ? 'petal-fall-a' : 'petal-fall-b';
+    el.style.animation = `${anim} ${duration}s linear forwards`;
+    el.style.transform = 'scale(' + (0.5 + Math.random()*0.5).toFixed(2) + ')';
+    bgPetalLayer.appendChild(el);
+    setTimeout(() => el.remove(), duration * 1000 + 200);
+  }
+
+  function startBgPetals(){
+    if (bgPetalInterval) return;
+    spawnBgPetal();
+    bgPetalInterval = setInterval(spawnBgPetal, 650);
+  }
+
+  function stopBgPetals(){
+    if (bgPetalInterval){
+      clearInterval(bgPetalInterval);
+      bgPetalInterval = null;
+    }
+    bgPetalLayer.innerHTML = '';
   }
 
   envelopeWrap.addEventListener('click', () => {
@@ -586,6 +660,7 @@
     e.stopPropagation();
     letterWrap.classList.remove('visible');
     envelope.classList.remove('open');
+    stopBgPetals();
     setTimeout(() => {
       envelopeWrap.classList.remove('hidden');
     }, 400);
@@ -701,6 +776,17 @@
 
   renderTracklist();
   updateLabel();
+
+  /* ---------- DAYS COUNTER ---------- */
+  // Fecha aproximada (8 meses antes de hoy). Ajustar con la fecha real si hace falta.
+  const START_DATE = new Date('2026-01-15T00:00:00');
+  function updateDaysCounter(){
+    const diffMs = Date.now() - START_DATE.getTime();
+    const days = Math.max(0, Math.floor(diffMs / 86400000));
+    document.getElementById('daysCount').textContent = days;
+  }
+  updateDaysCounter();
+  setInterval(updateDaysCounter, 60 * 60 * 1000);
 </script>
 
 </body>
